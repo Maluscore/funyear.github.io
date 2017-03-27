@@ -206,6 +206,26 @@ const bindNtbutton = function() {
     })
 }
 
+const bindButton = function() {
+    var musicButton = e('.music-button')
+    var bannerButton = e('.banner-button')
+    bindEvent(musicButton, 'click', function(){
+        e('.music-introduce').classList.toggle('notShow')
+        e('.about-article').classList.toggle('notShow')
+    })
+
+    bindEvent(bannerButton, 'click', function(){
+        e('.photo-introduce').classList.toggle('notShow')
+        e('.work-photo').classList.toggle('notShow')
+    })
+}
+
+const show = function() {
+    var className = 'noShow'
+    e('.write').classList.remove(className)
+    e('.write-1').classList.remove(className)
+}
+
 const bindall = function() {
     bindTiao()
     bindHeader()
@@ -214,12 +234,13 @@ const bindall = function() {
     bindNextbutton()
     bindPrevbutton()
     bindYuan()
+    bindButton()
 }
 
 const init = function() {
     setInterval(playNext, 10000)
     setInterval(themeNext, 5000)
-
+    setTimeout(show, 2000)
 }
 
 const __main = function(){

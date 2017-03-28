@@ -151,16 +151,27 @@ const bindNextbutton = function() {
     })
 }
 
+const playPrev = function() {
+    var s = e ('.section')
+    var father = s.parentElement
+    var grandpa = father.parentElement
+    var zongUu = parseInt(grandpa.dataset.article)
+    var index = parseInt(grandpa.dataset.sections)
+    var newIndex = (index + zongUu - 1) % zongUu
+    goNext(newIndex)
+}
+
 const bindPrevbutton =function() {
     var prev = e('.prev')
     bindEvent(prev, 'click', function(){
-        var s = e ('.section')
-    	var father = s.parentElement
-        var grandpa = father.parentElement
-    	var zongUu = parseInt(grandpa.dataset.article)
-    	var index = parseInt(grandpa.dataset.sections)
-        var newIndex = (index + zongUu - 1) % zongUu
-        goNext(newIndex)
+        // var s = e ('.section')
+    	// var father = s.parentElement
+        // var grandpa = father.parentElement
+    	// var zongUu = parseInt(grandpa.dataset.article)
+    	// var index = parseInt(grandpa.dataset.sections)
+        // var newIndex = (index + zongUu - 1) % zongUu
+        // goNext(newIndex)
+        playPrev()
     })
 }
 
@@ -286,18 +297,22 @@ const bindSlideEvent = function() {
 
         var dire = judgeDirection(startX, startY, endX, endY)
         if (dire == 'left') {
-            // 方向为左执行啥？
-            // left()
+            let n = e('.main-content').dataset.sections
+            if (n != '2') {
+                clearInterval(Status.banner)
+                playNext()
+                Status.banner = setInterval(playNext, 10000)
+            }
         } else if (dire == 'right') {
-            // 同上
-            // right()
+            let n = e('.main-content').dataset.sections
+            if (n != '0') {
+                clearInterval(Status.banner)
+                playPrev()
+                Status.banner = setInterval(playNext, 10000)
+            }
         } else if (dire == 'up') {
-            // 同上
-            // up()
             goNextPage()
         } else if (dire == 'down') {
-            // 同上
-            // down()
             goPrevPage()
         } else if (!dire) {
             // 检测不出方向
@@ -320,7 +335,7 @@ const bindall = function() {
 }
 
 const init = function() {
-    setInterval(playNext, 10000)
+    Status.banner = setInterval(playNext, 10000)
     setInterval(themeNext, 5000)
     setTimeout(show, 2000)
 }
@@ -329,4 +344,9 @@ const __main = function(){
     bindall()
     init()
 }
+
+var Status = {
+    banner: '',
+}
+
 __main()

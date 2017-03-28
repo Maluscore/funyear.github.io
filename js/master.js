@@ -56,6 +56,12 @@ const setTag = function(index) {
     e('line').style.transform = `translateX(${index * 5}rem)`
 }
 
+const goPrevPage = function() {
+    var now = e('.content').dataset.page
+    var prev = Number(now) - 1
+    goPage(prev)
+}
+
 const goNextPage = function() {
     var now = e('.content').dataset.page
     var next = Number(now) + 1
@@ -226,6 +232,81 @@ const show = function() {
     e('.write-1').classList.remove(className)
 }
 
+
+
+//  检测滑动方向
+const angleBySlide = function(dx, dy) {
+    return Math.atan2(dy,dx) * 180 / Math.PI
+}
+
+// 判断方向
+const judgeDirection = function(sX, sY, eX, eY) {
+    /*
+        根据坐标判断 方向
+        return: false 为判断不出
+                'up' 为上
+                'down'
+                'right'
+                'left'
+    */
+    var dx = eX - sX
+    var dy = sY - eY
+    var angle = angleBySlide(dx, dy);
+    // 滑动距离太短 的情况
+    if (Math.abs(dx) < 30 && Math.abs(dy) < 30) {
+        return false
+    } else if (angle >= -45 && angle < 45) {
+        return 'right'
+    } else if (angle >= 45 && angle < 135) {
+        return 'up'
+    } else if (angle >= -135 && angle < -45) {
+        return 'down'
+    } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+        return 'left'
+    }
+}
+
+// 给 element 绑定事件
+const bindSlideEvent = function() {
+    var startX, startY
+
+    e('.content').addEventListener('touchstart', function(event){
+        // console.log('touchstart', event);
+        startX = event.touches[0].pageX
+        startY = event.touches[0].pageY
+    })
+
+    e('.content').addEventListener('touchmove', function(event){
+        event.preventDefault()
+    })
+
+    e('.content').addEventListener('touchend', function(event){
+        var endX = event.changedTouches[0].pageX;
+        var endY = event.changedTouches[0].pageY;
+
+        var dire = judgeDirection(startX, startY, endX, endY)
+        if (dire == 'left') {
+            // 方向为左执行啥？
+            // left()
+        } else if (dire == 'right') {
+            // 同上
+            // right()
+        } else if (dire == 'up') {
+            // 同上
+            // up()
+            goNextPage()
+        } else if (dire == 'down') {
+            // 同上
+            // down()
+            goPrevPage()
+        } else if (!dire) {
+            // 检测不出方向
+            return false
+        }
+    })
+}
+
+
 const bindall = function() {
     bindTiao()
     bindHeader()
@@ -235,6 +316,7 @@ const bindall = function() {
     bindPrevbutton()
     bindYuan()
     bindButton()
+    bindSlideEvent()
 }
 
 const init = function() {
